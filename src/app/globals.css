@@ -157,12 +157,15 @@ h4 { font-size: var(--text-h4); }
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 var(--space-md);
+  /* только горизонтальные отступы (longhand), чтобы не перебивать py-* утилиты */
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
 }
 
 @media (min-width: 768px) {
   .container {
-    padding: 0 var(--space-lg);
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
   }
 }
 
@@ -737,6 +740,52 @@ h4 { font-size: var(--text-h4); }
 .store-mini--more {
   font-size: 11px;
   font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   Hero-баннер (заглушка)
+   ============================================ */
+
+.hero-banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 24 / 7;
+  min-height: 240px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(128, 18, 255, 0.04) 0 18px,
+      transparent 18px 36px
+    ),
+    linear-gradient(120deg, var(--color-mauve) 0%, rgba(182, 255, 97, 0.35) 55%, rgba(255, 105, 0, 0.18) 100%);
+  border: 2px dashed color-mix(in srgb, var(--color-violet) 30%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-banner__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--color-russian-violet);
+  padding: 24px;
+}
+
+.hero-banner__title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(18px, 3vw, 28px);
+  line-height: 1.15;
+}
+
+.hero-banner__hint {
+  margin-top: 6px;
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
 

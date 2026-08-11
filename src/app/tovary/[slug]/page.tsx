@@ -61,7 +61,7 @@ export default async function ProductPage({
       <div className="container" style={{ padding: '24px 24px 96px' }}>
         {/* Breadcrumbs */}
         <nav className="text-[13px] mb-6 text-[var(--color-text-muted)]">
-          <Link href="/tovary" className="hover:text-[var(--color-violet)]">Каталог Xiaomi</Link>
+          <Link href="/" className="hover:text-[var(--color-violet)]">Каталог Xiaomi</Link>
           {' / '}
           <span className="text-[var(--color-text)]">{product.category}</span>
         </nav>

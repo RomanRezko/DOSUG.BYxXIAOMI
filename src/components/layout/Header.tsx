@@ -80,7 +80,7 @@ export function Header() {
 
             {/* Каталог → якорь на каталог главной */}
             <Link
-              href="/tovary#catalog"
+              href="/#catalog"
               className="ml-2 px-5 py-2.5 bg-[#B6FF61] hover:bg-[#a8f050] text-[#120D31] text-[14px] font-semibold rounded-full transition-all hover:scale-105"
             >
               Каталог
@@ -107,7 +107,7 @@ export function Header() {
         {mobileMenuOpen && (
           <nav className="lg:hidden py-6 border-t border-[#8012FF]/20 flex flex-col gap-3">
             <Link
-              href="/tovary#catalog"
+              href="/#catalog"
               className="block w-full py-3 bg-[#B6FF61] text-[#120D31] text-center text-[15px] font-semibold rounded-full"
               onClick={() => setMobileMenuOpen(false)}
             >

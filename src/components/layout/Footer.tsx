@@ -56,12 +56,12 @@ export function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/tovary#catalog" className="text-[14px] text-white/60 hover:text-[#B6FF61] transition-colors">
+                <Link href="/#catalog" className="text-[14px] text-white/60 hover:text-[#B6FF61] transition-colors">
                   Все товары
                 </Link>
               </li>
               <li>
-                <Link href="/tovary" className="text-[14px] text-white/60 hover:text-[#B6FF61] transition-colors">
+                <Link href="/" className="text-[14px] text-white/60 hover:text-[#B6FF61] transition-colors">
                   Спецпредложения Xiaomi
                 </Link>
               </li>

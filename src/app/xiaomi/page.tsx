@@ -111,7 +111,7 @@ export default function XiaomiCollabPage() {
           </p>
 
           <div className="flex flex-wrap gap-3 mt-8">
-            <Link href="/tovary" className="btn btn--lg btn-collab">
+            <Link href="/#catalog" className="btn btn--lg btn-collab">
               Смотреть каталог
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -157,7 +157,7 @@ export default function XiaomiCollabPage() {
           <h2 id="featured-heading" className="section-title" style={{ marginBottom: 0 }}>
             Хиты коллаборации
           </h2>
-          <Link href="/tovary" className="section-link">
+          <Link href="/#catalog" className="section-link">
             Все товары
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -218,7 +218,7 @@ export default function XiaomiCollabPage() {
               Успейте забрать гаджеты Xiaomi по ценам коллаборации. Доставка по всей Беларуси.
             </p>
             <Link
-              href="/tovary"
+              href="/#catalog"
               className="btn btn--lg mt-8"
               style={{ background: '#fff', color: 'var(--color-russian-violet)' }}
             >
