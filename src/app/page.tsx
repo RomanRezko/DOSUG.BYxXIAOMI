@@ -40,8 +40,21 @@ function SortIcon({ kind }: { kind: VisibleSort }) {
 const minPriceOf = (p: (typeof products)[number]) =>
   p.offers && p.offers.length ? Math.min(...p.offers.map((o) => o.price)) : p.price;
 
-function CatalogContent() {
+/**
+ * Читает ?cat=<slug> из URL и прокидывает в фильтр (ссылки из бургер-меню).
+ * Вынесено в отдельный компонент под Suspense, чтобы useSearchParams не
+ * выбрасывал весь каталог из статического пререндера.
+ */
+function CatParamReader({ onCat }: { onCat: (c: string) => void }) {
   const searchParams = useSearchParams();
+  useEffect(() => {
+    const cat = searchParams.get('cat');
+    if (cat) onCat(cat);
+  }, [searchParams, onCat]);
+  return null;
+}
+
+function CatalogContent() {
   const [category, setCategory] = useState('all');
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
   const [sort, setSort] = useState<SortKey>('popular');
@@ -49,12 +62,6 @@ function CatalogContent() {
   // Сворачивание блоков фильтров на мобильной (на десктопе всегда раскрыты)
   const [catOpen, setCatOpen] = useState(false);
   const [storesOpen, setStoresOpen] = useState(false);
-
-  // Категория из URL (?cat=slug) — для ссылок из бургер-меню
-  useEffect(() => {
-    const cat = searchParams.get('cat');
-    if (cat) setCategory(cat);
-  }, [searchParams]);
 
   const toggleStore = (id: string) =>
     setSelectedStores((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
@@ -95,6 +102,10 @@ function CatalogContent() {
 
   return (
     <div style={{ background: 'var(--color-background-alt)' }}>
+      <Suspense fallback={null}>
+        <CatParamReader onCat={setCategory} />
+      </Suspense>
+
       {/* Бегущая строка между шапкой и баннером */}
       <CollabMarquee />
 
@@ -314,9 +325,5 @@ function CatalogContent() {
 }
 
 export default function CatalogHomePage() {
-  return (
-    <Suspense fallback={null}>
-      <CatalogContent />
-    </Suspense>
-  );
+  return <CatalogContent />;
 }
