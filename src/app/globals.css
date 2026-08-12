@@ -1349,6 +1349,11 @@ h4 { font-size: var(--text-h4); }
   margin-bottom: var(--space-md);
 }
 
+/* На мобильной блоки-фильтры в ряд — нижний отступ не нужен (есть gap) */
+@media (max-width: 1023px) {
+  .sidebar-block { margin-bottom: 0; }
+}
+
 .sidebar-block--dark {
   background: var(--color-russian-violet);
   color: var(--color-text-light);

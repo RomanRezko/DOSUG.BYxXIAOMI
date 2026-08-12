@@ -8,6 +8,8 @@ import { searchProducts, minPriceOf } from '@/lib/search';
 interface SearchOverlayProps {
   open: boolean;
   onClose: () => void;
+  /** Начальный запрос (например, текущий фильтр каталога) */
+  initialQuery?: string;
 }
 
 const formatPrice = (v: number) => v.toLocaleString('ru-RU') + ' р.';
@@ -16,18 +18,25 @@ const formatPrice = (v: number) => v.toLocaleString('ru-RU') + ' р.';
  * Глобальный оверлей поиска. Живые подсказки (топ-8 товаров) со ссылками
  * на страницы товаров + переход ко всем результатам на каталоге (/?q=...).
  */
-export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
+export function SearchOverlay({ open, onClose, initialQuery = '' }: SearchOverlayProps) {
   const [q, setQ] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Сброс и фокус при открытии
+  // Подставить текущий запрос и сфокусировать при открытии
   useEffect(() => {
     if (open) {
-      setQ('');
-      const t = setTimeout(() => inputRef.current?.focus(), 40);
+      setQ(initialQuery);
+      const t = setTimeout(() => {
+        const el = inputRef.current;
+        if (el) {
+          el.focus();
+          const n = el.value.length;
+          el.setSelectionRange(n, n);
+        }
+      }, 40);
       return () => clearTimeout(t);
     }
-  }, [open]);
+  }, [open, initialQuery]);
 
   // Esc — закрыть; блокируем прокрутку фона
   useEffect(() => {

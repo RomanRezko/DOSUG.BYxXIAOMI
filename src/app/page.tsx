@@ -8,6 +8,7 @@ import { matchesQuery } from '@/lib/search';
 import { ProductCard } from '@/components/shop/ProductCard';
 import { CollabMarquee } from '@/components/shop/CollabMarquee';
 import { HeroBanner } from '@/components/shop/HeroBanner';
+import { SearchOverlay } from '@/components/shop/SearchOverlay';
 
 type SortKey = 'popular' | 'cheap' | 'expensive' | 'rating';
 type VisibleSort = 'cheap' | 'expensive' | 'rating';
@@ -70,6 +71,7 @@ function CatalogContent() {
   const [category, setCategory] = useState('all');
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
   const [query, setQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
   const [sort, setSort] = useState<SortKey>('popular');
   const [catExpanded, setCatExpanded] = useState(false);
   // Сворачивание блоков фильтров на мобильной (на десктопе всегда раскрыты)
@@ -120,6 +122,9 @@ function CatalogContent() {
         <CatParamReader onCat={setCategory} onQuery={setQuery} />
       </Suspense>
 
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} initialQuery={query} />
+
+
       {/* Бегущая строка между шапкой и баннером */}
       <CollabMarquee />
 
@@ -137,7 +142,7 @@ function CatalogContent() {
           Умная техника Xiaomi со сравнением цен в магазинах-партнёрах.
         </p>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-3 lg:gap-8">
           {/* Sidebar */}
           <aside className="lg:w-[260px] shrink-0">
             <div className="relative flex flex-row items-start gap-3 lg:static lg:block">
@@ -290,8 +295,8 @@ function CatalogContent() {
 
           {/* Main */}
           <div className="flex-1 min-w-0">
-            {/* Поиск по каталогу */}
-            <div className="relative mb-4">
+            {/* Поиск по каталогу — открывает оверлей с подсказками */}
+            <div className="relative mb-3 lg:mb-4">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none">
                 <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -300,16 +305,20 @@ function CatalogContent() {
               <input
                 type="text"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Поиск по каталогу — название, категория, артикул…"
+                readOnly
+                onClick={() => setSearchOpen(true)}
+                placeholder="Поиск по товарам Xiaomi…"
                 aria-label="Поиск по каталогу"
-                className="w-full h-12 pl-12 pr-11 rounded-full bg-white text-[15px] outline-none transition-colors"
+                className="w-full h-12 pl-12 pr-11 rounded-full bg-white text-[15px] outline-none transition-colors cursor-pointer"
                 style={{ border: '1.5px solid rgba(18,13,49,0.1)' }}
               />
               {query && (
                 <button
                   type="button"
-                  onClick={() => setQuery('')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setQuery('');
+                  }}
                   aria-label="Очистить поиск"
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
                   style={{ background: 'var(--color-background-alt)' }}
