@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { DosugLogo } from '@/components/layout/DosugLogo';
 import { MiLogo } from '@/components/shop/MiLogo';
 import { productCategories } from '@/data/products';
+import { SearchOverlay } from '@/components/shop/SearchOverlay';
 
 const MAIN_SITE = 'https://dosug.by';
 
@@ -18,6 +19,7 @@ function BackArrow() {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <header className="bg-[#120D31] sticky top-0 z-50">
@@ -46,6 +48,7 @@ export function Header() {
           {/* Правая часть: поиск + соцсети + Каталог */}
           <div className="hidden lg:flex items-center gap-3">
             <button
+              onClick={() => setSearchOpen(true)}
               className="w-10 h-10 flex items-center justify-center rounded-full text-white/60 hover:text-[#B6FF61] hover:bg-[#8012FF]/20 transition-colors"
               aria-label="Поиск"
             >
@@ -88,10 +91,20 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile: поиск + меню */}
+          <div className="lg:hidden flex items-center gap-1">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-[#8012FF]/20 transition-colors"
+              aria-label="Поиск"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-[#8012FF]/20 transition-colors"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-[#8012FF]/20 transition-colors"
             aria-label="Меню"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,6 +115,7 @@ export function Header() {
               )}
             </svg>
           </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -155,6 +169,8 @@ export function Header() {
           </nav>
         )}
       </div>
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

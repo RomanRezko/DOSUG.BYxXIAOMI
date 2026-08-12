@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { products, productCategories } from '@/data/products';
 import { partnerList } from '@/data/partners';
+import { matchesQuery } from '@/lib/search';
 import { ProductCard } from '@/components/shop/ProductCard';
 import { CollabMarquee } from '@/components/shop/CollabMarquee';
 import { HeroBanner } from '@/components/shop/HeroBanner';
@@ -45,18 +46,30 @@ const minPriceOf = (p: (typeof products)[number]) =>
  * Вынесено в отдельный компонент под Suspense, чтобы useSearchParams не
  * выбрасывал весь каталог из статического пререндера.
  */
-function CatParamReader({ onCat }: { onCat: (c: string) => void }) {
+function CatParamReader({
+  onCat,
+  onQuery,
+}: {
+  onCat: (c: string) => void;
+  onQuery: (q: string) => void;
+}) {
   const searchParams = useSearchParams();
   useEffect(() => {
     const cat = searchParams.get('cat');
+    const q = searchParams.get('q');
     if (cat) onCat(cat);
-  }, [searchParams, onCat]);
+    if (q != null) onQuery(q);
+    if (cat || q) {
+      document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [searchParams, onCat, onQuery]);
   return null;
 }
 
 function CatalogContent() {
   const [category, setCategory] = useState('all');
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
+  const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortKey>('popular');
   const [catExpanded, setCatExpanded] = useState(false);
   // Сворачивание блоков фильтров на мобильной (на десктопе всегда раскрыты)
@@ -73,6 +86,7 @@ function CatalogContent() {
         const inStore = (p.offers ?? []).some((o) => selectedStores.includes(o.partnerId));
         if (!inStore) return false;
       }
+      if (query.trim() && !matchesQuery(p, query)) return false;
       return true;
     });
 
@@ -90,7 +104,7 @@ function CatalogContent() {
     });
 
     return list;
-  }, [category, selectedStores, sort]);
+  }, [category, selectedStores, query, sort]);
 
   const countFor = (slug: string) =>
     slug === 'all'
@@ -103,7 +117,7 @@ function CatalogContent() {
   return (
     <div style={{ background: 'var(--color-background-alt)' }}>
       <Suspense fallback={null}>
-        <CatParamReader onCat={setCategory} />
+        <CatParamReader onCat={setCategory} onQuery={setQuery} />
       </Suspense>
 
       {/* Бегущая строка между шапкой и баннером */}
@@ -276,10 +290,46 @@ function CatalogContent() {
 
           {/* Main */}
           <div className="flex-1 min-w-0">
+            {/* Поиск по каталогу */}
+            <div className="relative mb-4">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none">
+                <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Поиск по каталогу — название, категория, артикул…"
+                aria-label="Поиск по каталогу"
+                className="w-full h-12 pl-12 pr-11 rounded-full bg-white text-[15px] outline-none transition-colors"
+                style={{ border: '1.5px solid rgba(18,13,49,0.1)' }}
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery('')}
+                  aria-label="Очистить поиск"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+                  style={{ background: 'var(--color-background-alt)' }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
             {/* Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
               <p className="text-[14px] text-[var(--color-text-muted)]">
                 Найдено <b style={{ color: 'var(--color-text)' }}>{visible.length}</b> товаров
+                {query.trim() && (
+                  <>
+                    {' '}по запросу «<b style={{ color: 'var(--color-text)' }}>{query.trim()}</b>»
+                  </>
+                )}
               </p>
               <div className="flex flex-wrap gap-2">
                 {SORT_OPTIONS.map((s) => {
