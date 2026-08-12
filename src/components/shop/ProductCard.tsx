@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Product } from '@/types';
 import { productDetails } from '@/data/productDetails';
 import { partners } from '@/data/partners';
+import { RatingBadge } from '@/components/shop/RatingBadge';
 
 function formatPrice(value: number): string {
   return value.toLocaleString('ru-RU') + ' р.';
@@ -75,10 +76,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="flex flex-col grow p-5">
         {/* Rating */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="rating">
-            <span className="rating-star">★</span>
-            {product.rating.toFixed(1)}
-          </span>
+          <RatingBadge offers={product.offers} rating={product.rating} />
           <span className="text-[12px] text-[var(--color-text-muted)]">
             {product.reviewCount} отзывов
           </span>

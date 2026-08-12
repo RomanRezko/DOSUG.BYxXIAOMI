@@ -913,10 +913,22 @@ function pickStores(productId: string): string[] {
   return picked;
 }
 
+// Детерминированный рейтинг товара в конкретном магазине: 4.3–5.0
+function ratingForPartner(productId: string, partnerId: string): number {
+  const seed = [...(productId + '|' + partnerId)].reduce((a, c) => a + c.charCodeAt(0), 0);
+  return Math.round((4.3 + (seed % 8) * 0.1) * 10) / 10;
+}
+
 for (const product of products) {
   product.offers = pickStores(product.id).map((id) => ({
     partnerId: id,
     url: partners[id].homepage,
     price: priceForPartner(product.price, product.id, id),
+    rating: ratingForPartner(product.id, id),
   }));
+  // Рейтинг товара = средний рейтинг по магазинам
+  const rs = product.offers.map((o) => o.rating as number);
+  if (rs.length) {
+    product.rating = Math.round((rs.reduce((a, b) => a + b, 0) / rs.length) * 10) / 10;
+  }
 }

@@ -93,6 +93,8 @@ export interface PartnerOffer {
   url: string;
   /** Цена товара в этом магазине, BYN */
   price: number;
+  /** Рейтинг товара в этом магазине (0–5) */
+  rating?: number;
 }
 
 export interface Product {

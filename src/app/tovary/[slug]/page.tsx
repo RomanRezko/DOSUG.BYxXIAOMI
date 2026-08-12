@@ -7,6 +7,7 @@ import { ProductGallery } from '@/components/shop/ProductGallery';
 import { DiscountBadge } from '@/components/shop/DiscountBadge';
 import { ProductCard } from '@/components/shop/ProductCard';
 import { PartnerOffers } from '@/components/shop/PartnerOffers';
+import { RatingBadge } from '@/components/shop/RatingBadge';
 import { CollabMarquee } from '@/components/shop/CollabMarquee';
 import { getSpecs, getDescription, getGalleryBackgrounds } from '@/lib/productContent';
 import { productDetails } from '@/data/productDetails';
@@ -78,10 +79,7 @@ export default async function ProductPage({
             </h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-3">
-              <span className="rating">
-                <span className="rating-star">★</span>
-                {product.rating.toFixed(1)}
-              </span>
+              <RatingBadge offers={product.offers} rating={product.rating} />
               <span className="text-[13px] text-[var(--color-text-muted)]">
                 {product.reviewCount} отзывов
               </span>

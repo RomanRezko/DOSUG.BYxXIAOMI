@@ -1075,6 +1075,90 @@ h4 { font-size: var(--text-h4); }
 }
 
 /* ============================================
+   Рейтинг по магазинам (popover)
+   ============================================ */
+
+.rate {
+  position: relative;
+  display: inline-block;
+}
+
+.rate__tag {
+  border: 0;
+  cursor: pointer;
+  gap: 4px;
+}
+
+.rate__chev {
+  color: color-mix(in srgb, var(--color-russian-violet) 55%, transparent);
+  margin-left: 1px;
+}
+
+.rate__pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--color-russian-violet) 8%, transparent);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  box-shadow: var(--shadow-lg);
+  z-index: 30;
+}
+
+.rate__title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.rate__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rate__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.rate__row:hover {
+  background: var(--color-background-alt);
+}
+
+.rate__logo {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+}
+
+.rate__logo img {
+  height: 16px;
+  width: auto;
+  max-width: 92px;
+  object-fit: contain;
+}
+
+.rate__val {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-russian-violet);
+  white-space: nowrap;
+}
+
+/* ============================================
    Inputs
    ============================================ */
 
