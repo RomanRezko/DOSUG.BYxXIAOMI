@@ -752,17 +752,83 @@ h4 { font-size: var(--text-h4); }
   min-height: 240px;
   border-radius: var(--radius-xl);
   overflow: hidden;
+  border: 2px dashed color-mix(in srgb, var(--color-violet) 30%, transparent);
+}
+
+/* На мобильной баннер выше — соотношение 3:2 (реком. размер 1080×720) */
+@media (max-width: 639px) {
+  .hero-banner {
+    aspect-ratio: 3 / 2;
+    min-height: 180px;
+  }
+}
+
+.hero-banner__slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background:
     repeating-linear-gradient(
       -45deg,
       rgba(128, 18, 255, 0.04) 0 18px,
       transparent 18px 36px
-    ),
-    linear-gradient(120deg, var(--color-mauve) 0%, rgba(182, 255, 97, 0.35) 55%, rgba(255, 105, 0, 0.18) 100%);
-  border: 2px dashed color-mix(in srgb, var(--color-violet) 30%, transparent);
+    );
+  transition: opacity 0.4s ease;
+}
+
+/* Стрелки перелистывания */
+.hero-banner__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--color-russian-violet);
+  box-shadow: 0 4px 14px rgba(18, 13, 49, 0.14);
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.hero-banner__arrow:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.06);
+}
+.hero-banner__arrow--prev { left: 14px; }
+.hero-banner__arrow--next { right: 14px; }
+
+@media (max-width: 639px) {
+  .hero-banner__arrow { width: 36px; height: 36px; }
+  .hero-banner__arrow--prev { left: 8px; }
+  .hero-banner__arrow--next { right: 8px; }
+}
+
+/* Точки-индикаторы */
+.hero-banner__dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+.hero-banner__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(18, 13, 49, 0.25);
+  transition: background 0.2s ease, width 0.2s ease;
+}
+.hero-banner__dot.is-active {
+  width: 24px;
+  background: var(--color-xiaomi);
 }
 
 .hero-banner__inner {
@@ -771,7 +837,12 @@ h4 { font-size: var(--text-h4); }
   align-items: center;
   text-align: center;
   color: var(--color-russian-violet);
-  padding: 24px;
+  /* горизонтальный отступ, чтобы текст не заходил под стрелки */
+  padding: 24px 64px;
+}
+
+@media (max-width: 639px) {
+  .hero-banner__inner { padding: 18px 52px; }
 }
 
 .hero-banner__title {
@@ -1328,7 +1399,7 @@ h4 { font-size: var(--text-h4); }
   display: flex;
   width: max-content;
   /* замедлено для комфортного чтения */
-  animation: marquee 40s linear infinite;
+  animation: marquee 56s linear infinite;
 }
 
 .marquee-mask {
