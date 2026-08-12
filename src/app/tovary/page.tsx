@@ -1,6 +1,14 @@
-import { redirect } from 'next/navigation';
+'use client';
 
-/** Каталог переехал на главную. Старый адрес /tovary — редирект на /. */
+import { useEffect } from 'react';
+
+/**
+ * Каталог переехал на главную. Старый адрес /tovary — клиентский редирект на /
+ * (серверный redirect() несовместим со статическим экспортом).
+ */
 export default function TovaryRedirectPage() {
-  redirect('/');
+  useEffect(() => {
+    window.location.replace('/');
+  }, []);
+  return null;
 }

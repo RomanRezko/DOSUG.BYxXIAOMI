@@ -1,18 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Статический экспорт для shared-хостинга (Beget): генерирует out/ с готовым HTML
+  output: 'export',
+  trailingSlash: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'dosug.by',
-      },
-    ],
-    formats: ['image/avif', 'image/webp'],
+    // на статике оптимизация недоступна; в проекте используются обычные <img>
+    unoptimized: true,
   },
 };
 
