@@ -126,11 +126,14 @@ function CatalogContent() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <aside className="lg:w-[260px] shrink-0">
-            <div className="flex flex-row items-start gap-3 lg:block">
+            <div className="relative flex flex-row items-start gap-3 lg:static lg:block">
             <div className="sidebar-block flex-1 min-w-0">
               <button
                 type="button"
-                onClick={() => setCatOpen((v) => !v)}
+                onClick={() => {
+                  setCatOpen((v) => !v);
+                  setStoresOpen(false);
+                }}
                 className="w-full flex items-center gap-2 lg:pointer-events-none"
                 aria-expanded={catOpen}
               >
@@ -148,7 +151,7 @@ function CatalogContent() {
                 </svg>
               </button>
 
-              <div className={`${catOpen ? 'block' : 'hidden'} lg:block mt-3`}>
+              <div className={`${catOpen ? 'block' : 'hidden'} lg:block absolute left-0 right-0 top-full z-30 mt-2 p-4 rounded-[16px] bg-[var(--color-background)] shadow-xl border border-black/5 lg:static lg:mt-3 lg:p-0 lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-0`}>
               <ul className="flex flex-col gap-1">
                 {(catExpanded ? productCategories : productCategories.slice(0, CAT_LIMIT)).map((c) => {
                   const active = category === c.slug;
@@ -207,11 +210,14 @@ function CatalogContent() {
               <div className="flex items-center justify-between gap-2">
                 <button
                   type="button"
-                  onClick={() => setStoresOpen((v) => !v)}
+                  onClick={() => {
+                    setStoresOpen((v) => !v);
+                    setCatOpen(false);
+                  }}
                   className="flex-1 flex items-center gap-2 lg:pointer-events-none"
                   aria-expanded={storesOpen}
                 >
-                  <h2 className="sidebar-title flex-1 text-left" style={{ marginBottom: 0, border: 'none', paddingBottom: 0 }}>
+                  <h2 className="sidebar-title flex-1 text-left" style={{ marginBottom: 0, borderBottomColor: 'var(--color-violet)' }}>
                     Магазин
                   </h2>
                   <svg
@@ -235,7 +241,7 @@ function CatalogContent() {
                   </button>
                 )}
               </div>
-              <ul className={`${storesOpen ? 'flex' : 'hidden'} lg:flex flex-col gap-0.5 mt-3`}>
+              <ul className={`${storesOpen ? 'flex' : 'hidden'} lg:flex flex-col gap-0.5 absolute left-0 right-0 top-full z-30 mt-2 p-4 rounded-[16px] bg-[var(--color-background)] shadow-xl border border-black/5 lg:static lg:mt-3 lg:p-0 lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-0`}>
                 {partnerList.map((p) => {
                   const checked = selectedStores.includes(p.id);
                   return (
