@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { DosugLogo } from '@/components/layout/DosugLogo';
 import { MiLogo } from '@/components/shop/MiLogo';
+import { productCategories } from '@/data/products';
 
 const MAIN_SITE = 'https://dosug.by';
 
@@ -121,6 +122,36 @@ export function Header() {
               <BackArrow />
               Вернуться на dosug.by
             </a>
+
+            {/* Категории */}
+            <div className="mt-2">
+              <p className="text-white/40 text-[12px] font-semibold uppercase tracking-wider px-1 mb-2">
+                Категории
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/?cat=all#catalog"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-[12px] bg-white/5 text-white/85 text-[14px] hover:bg-[#8012FF]/25 hover:text-white transition-colors"
+                >
+                  <span>🛍️</span>
+                  Все товары
+                </Link>
+                {productCategories
+                  .filter((c) => c.slug !== 'all')
+                  .map((c) => (
+                    <Link
+                      key={c.slug}
+                      href={`/?cat=${c.slug}#catalog`}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-[12px] bg-white/5 text-white/85 text-[14px] hover:bg-[#8012FF]/25 hover:text-white transition-colors"
+                    >
+                      <span>{c.icon}</span>
+                      <span className="truncate">{c.name}</span>
+                    </Link>
+                  ))}
+              </div>
+            </div>
           </nav>
         )}
       </div>

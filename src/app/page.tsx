@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { products, productCategories } from '@/data/products';
 import { partnerList } from '@/data/partners';
 import { ProductCard } from '@/components/shop/ProductCard';
@@ -39,7 +40,8 @@ function SortIcon({ kind }: { kind: VisibleSort }) {
 const minPriceOf = (p: (typeof products)[number]) =>
   p.offers && p.offers.length ? Math.min(...p.offers.map((o) => o.price)) : p.price;
 
-export default function CatalogHomePage() {
+function CatalogContent() {
+  const searchParams = useSearchParams();
   const [category, setCategory] = useState('all');
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
   const [sort, setSort] = useState<SortKey>('popular');
@@ -47,6 +49,12 @@ export default function CatalogHomePage() {
   // Сворачивание блоков фильтров на мобильной (на десктопе всегда раскрыты)
   const [catOpen, setCatOpen] = useState(false);
   const [storesOpen, setStoresOpen] = useState(false);
+
+  // Категория из URL (?cat=slug) — для ссылок из бургер-меню
+  useEffect(() => {
+    const cat = searchParams.get('cat');
+    if (cat) setCategory(cat);
+  }, [searchParams]);
 
   const toggleStore = (id: string) =>
     setSelectedStores((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
@@ -107,7 +115,8 @@ export default function CatalogHomePage() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <aside className="lg:w-[260px] shrink-0">
-            <div className="sidebar-block">
+            <div className="flex flex-row items-start gap-3 lg:block">
+            <div className="sidebar-block flex-1 min-w-0">
               <button
                 type="button"
                 onClick={() => setCatOpen((v) => !v)}
@@ -183,7 +192,7 @@ export default function CatalogHomePage() {
               </div>
             </div>
 
-            <div className="sidebar-block">
+            <div className="sidebar-block flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
                 <button
                   type="button"
@@ -245,6 +254,7 @@ export default function CatalogHomePage() {
                 })}
               </ul>
             </div>
+            </div>
           </aside>
 
           {/* Main */}
@@ -300,5 +310,13 @@ export default function CatalogHomePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CatalogHomePage() {
+  return (
+    <Suspense fallback={null}>
+      <CatalogContent />
+    </Suspense>
   );
 }
