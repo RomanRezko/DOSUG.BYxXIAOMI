@@ -178,7 +178,10 @@ function CatalogContent() {
                     <li key={c.slug}>
                       <button
                         type="button"
-                        onClick={() => setCategory(c.slug)}
+                        onClick={() => {
+                          setCategory(c.slug);
+                          setCatOpen(false);
+                        }}
                         className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-[12px] text-left transition-colors"
                         style={{
                           background: active ? 'var(--color-violet)' : 'transparent',
