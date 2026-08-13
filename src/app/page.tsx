@@ -77,9 +77,26 @@ function CatalogContent() {
   // Сворачивание блоков фильтров на мобильной (на десктопе всегда раскрыты)
   const [catOpen, setCatOpen] = useState(false);
   const [storesOpen, setStoresOpen] = useState(false);
+  // Черновой выбор магазинов — применяется по кнопке «Применить»
+  const [draftStores, setDraftStores] = useState<string[]>([]);
 
   const toggleStore = (id: string) =>
-    setSelectedStores((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+    setDraftStores((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+
+  const applyStores = () => {
+    setSelectedStores(draftStores);
+    setStoresOpen(false);
+  };
+
+  const resetStores = () => {
+    setDraftStores([]);
+    setSelectedStores([]);
+  };
+
+  // При открытии блока на мобильной синхронизируем черновик с применённым
+  useEffect(() => {
+    if (storesOpen) setDraftStores(selectedStores);
+  }, [storesOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visible = useMemo(() => {
     let list = products.filter((p) => {
@@ -229,43 +246,33 @@ function CatalogContent() {
             </div>
 
             <div className="sidebar-block flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStoresOpen((v) => !v);
-                    setCatOpen(false);
-                  }}
-                  className="flex-1 flex items-center gap-2 lg:pointer-events-none"
-                  aria-expanded={storesOpen}
+              <button
+                type="button"
+                onClick={() => {
+                  setStoresOpen((v) => !v);
+                  setCatOpen(false);
+                }}
+                className="w-full flex items-center gap-2 lg:pointer-events-none"
+                aria-expanded={storesOpen}
+              >
+                <h2 className="sidebar-title flex-1 text-left" style={{ marginBottom: 0, borderBottomColor: 'var(--color-violet)' }}>
+                  Магазин
+                </h2>
+                <svg
+                  className={`w-4 h-4 shrink-0 lg:hidden text-[var(--color-text-muted)] transition-transform ${storesOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
-                  <h2 className="sidebar-title flex-1 text-left" style={{ marginBottom: 0, borderBottomColor: 'var(--color-violet)' }}>
-                    Магазин
-                  </h2>
-                  <svg
-                    className={`w-4 h-4 shrink-0 lg:hidden text-[var(--color-text-muted)] transition-transform ${storesOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {selectedStores.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedStores([])}
-                    className="text-[12px] font-medium shrink-0"
-                    style={{ color: 'var(--color-violet)' }}
-                  >
-                    Сбросить
-                  </button>
-                )}
-              </div>
-              <ul className={`${storesOpen ? 'flex' : 'hidden'} lg:flex flex-col gap-0.5 absolute left-0 right-0 top-full z-30 mt-2 p-4 rounded-[16px] bg-[var(--color-background)] shadow-xl border border-black/5 lg:static lg:mt-3 lg:p-0 lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-0`}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <div className={`${storesOpen ? 'block' : 'hidden'} lg:block absolute left-0 right-0 top-full z-30 mt-2 p-4 rounded-[16px] bg-[var(--color-background)] shadow-xl border border-black/5 lg:static lg:mt-3 lg:p-0 lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-0`}>
+              <ul className="flex flex-col gap-0.5">
                 {partnerList.map((p) => {
-                  const checked = selectedStores.includes(p.id);
+                  const checked = draftStores.includes(p.id);
                   return (
                     <li key={p.id}>
                       <label className="flex items-center justify-between gap-2 px-2 py-2 rounded-[10px] cursor-pointer hover:bg-[var(--color-background-alt)] transition-colors">
@@ -292,6 +299,28 @@ function CatalogContent() {
                   );
                 })}
               </ul>
+
+              <div className="flex items-center gap-2 mt-3 pt-3" style={{ borderTop: '1px solid rgba(18,13,49,0.08)' }}>
+                <button
+                  type="button"
+                  onClick={applyStores}
+                  className="flex-1 py-2 rounded-full text-[13px] font-semibold text-white transition-colors hover:opacity-90"
+                  style={{ background: 'var(--color-violet)' }}
+                >
+                  Применить
+                </button>
+                {draftStores.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={resetStores}
+                    className="py-2 px-3.5 rounded-full text-[13px] font-semibold shrink-0 transition-colors"
+                    style={{ color: 'var(--color-violet)', background: 'var(--color-background-alt)' }}
+                  >
+                    Сбросить
+                  </button>
+                )}
+              </div>
+              </div>
             </div>
             </div>
           </aside>
